@@ -1,4 +1,4 @@
-package com.chaika.batch.configuration;
+package com.chaika.batch.configuration.step;
 
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.Job;
