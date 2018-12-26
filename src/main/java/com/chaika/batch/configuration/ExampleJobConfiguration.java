@@ -2,7 +2,6 @@ package com.chaika.batch.configuration;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.repeat.RepeatStatus;
@@ -14,26 +13,24 @@ import org.springframework.context.annotation.Configuration;
  * Created by echaika on 24.12.2018
  */
 @Configuration
-@EnableBatchProcessing
-public class JobConfiguration {
+public class ExampleJobConfiguration {
 
     private final JobBuilderFactory jobBuilderFactory;
 
     private final StepBuilderFactory stepBuilderFactory;
 
     @Autowired
-    public JobConfiguration(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory) {
+    public ExampleJobConfiguration(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory) {
         this.jobBuilderFactory = jobBuilderFactory;
         this.stepBuilderFactory = stepBuilderFactory;
     }
 
     @Bean
-    public Step step1() {
+    public Step exampleJobStep1() {
         return stepBuilderFactory
-                .get("step1")
+                .get("exampleJobStep1")
                 .tasklet((contribution, chunkContext) -> {
-                    System.out.println("Step1 executed");
-                    System.out.println("exampleJob executed");
+                    System.out.println(">> exampleJob Step 1");
                     return RepeatStatus.FINISHED;
                 }).build();
     }
@@ -42,7 +39,7 @@ public class JobConfiguration {
     public Job exampleJob() {
         return jobBuilderFactory
                 .get("exampleJob")
-                .start(step1())
+                .start(exampleJobStep1())
                 .build();
     }
 }
