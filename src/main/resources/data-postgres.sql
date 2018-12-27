@@ -1,0 +1,9 @@
+insert into customer (firstname, lastname, birthdate) values ('Jonh', 'Doe', to_date('12/03/2018', 'dd/MM/yyyy'));
+insert into customer (firstname, lastname, birthdate) values ('Jonhssd', 'Doeasa', to_date('12/04/2018', 'dd/MM/yyyy'));
+insert into customer (firstname, lastname, birthdate) values ('Jonhas', 'Doewew', to_date('12/05/2018', 'dd/MM/yyyy'));
+insert into customer (firstname, lastname, birthdate) values ('Jonhcdc', 'Doexc', to_date('12/06/2018', 'dd/MM/yyyy'));
+insert into customer (firstname, lastname, birthdate) values ('Jonhfsf', 'Doecvcv', to_date('12/07/2018', 'dd/MM/yyyy'));
+insert into customer (firstname, lastname, birthdate) values ('Jonhfb', 'Doeqaqa', to_date('12/08/2018', 'dd/MM/yyyy'));
+insert into customer (firstname, lastname, birthdate) values ('Jonhik', 'Doeujuj', to_date('12/09/2018', 'dd/MM/yyyy'));
+insert into customer (firstname, lastname, birthdate) values ('Jonheed', 'Doedbb', to_date('12/10/2018', 'dd/MM/yyyy'));
+insert into customer (firstname, lastname, birthdate) values ('Jonhnhnh', 'Doemkmkm', to_date('12/11/2018', 'dd/MM/yyyy'));

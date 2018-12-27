@@ -1,4 +1,4 @@
-package com.chaika.batch.configuration.input.reader;
+package com.chaika.batch.configuration.input.reader.example;
 
 import org.springframework.batch.item.ItemReader;
 
