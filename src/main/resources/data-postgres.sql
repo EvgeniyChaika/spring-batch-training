@@ -1,3 +1,5 @@
+-- databaseJob fake data
+
 insert into customer (firstname, lastname, birthdate) values ('Jonh', 'Doe', '12/03/2018');
 insert into customer (firstname, lastname, birthdate) values ('Nonhssd', 'Doeasa', '12/04/2018');
 insert into customer (firstname, lastname, birthdate) values ('Ronhas', 'Doewew', '12/05/2018');

@@ -1,4 +1,4 @@
-package com.chaika.batch.configuration.input.reader.jdbc.dao;
+package com.chaika.batch.configuration.input.reader.dao;
 
 import java.util.Date;
 

@@ -1,6 +1,7 @@
 package com.chaika.batch.configuration.input.reader.jdbc;
 
-import com.chaika.batch.configuration.input.reader.jdbc.dao.Customer;
+import com.chaika.batch.configuration.input.reader.dao.Customer;
+import com.chaika.batch.configuration.input.reader.jdbc.mapper.CustomerDatabaseJobRowMapper;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
