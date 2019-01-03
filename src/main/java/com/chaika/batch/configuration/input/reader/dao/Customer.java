@@ -13,13 +13,13 @@ public class Customer {
 
     private final String lastName;
 
-    private final Date birthDate;
+    private final Date birthdate;
 
-    public Customer(Long id, String firstName, String lastName, Date birthDate) {
+    public Customer(Long id, String firstName, String lastName, Date birthdate) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.birthDate = birthDate;
+        this.birthdate = birthdate;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class Customer {
         sb.append("id=").append(id);
         sb.append(", firstName='").append(firstName).append('\'');
         sb.append(", lastName='").append(lastName).append('\'');
-        sb.append(", birthDate=").append(birthDate);
+        sb.append(", birthDate=").append(birthdate);
         sb.append('}');
         return sb.toString();
     }
