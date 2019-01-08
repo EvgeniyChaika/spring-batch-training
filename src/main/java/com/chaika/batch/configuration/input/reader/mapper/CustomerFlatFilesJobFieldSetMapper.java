@@ -1,4 +1,4 @@
-package com.chaika.batch.configuration.input.reader.flatfiles.mapper;
+package com.chaika.batch.configuration.input.reader.mapper;
 
 import com.chaika.batch.configuration.input.reader.dao.Customer;
 import org.springframework.batch.item.file.mapping.FieldSetMapper;
@@ -14,9 +14,9 @@ public class CustomerFlatFilesJobFieldSetMapper implements FieldSetMapper<Custom
     public Customer mapFieldSet(FieldSet fieldSet) throws BindException {
         return new Customer(
                 fieldSet.readLong("id"),
-                fieldSet.readString("firstname"),
-                fieldSet.readString("lastname"),
-                fieldSet.readDate("birthdate", "dd/MM/yyyy HH:mm:ss")
+                fieldSet.readString("firstName"),
+                fieldSet.readString("lastName"),
+                fieldSet.readDate("birthdate", "yyyy-MM-dd HH:mm:ss")
         );
     }
 }

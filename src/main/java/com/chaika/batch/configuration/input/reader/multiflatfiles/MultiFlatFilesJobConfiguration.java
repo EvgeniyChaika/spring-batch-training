@@ -1,12 +1,11 @@
 package com.chaika.batch.configuration.input.reader.multiflatfiles;
 
 import com.chaika.batch.configuration.input.reader.dao.Customer;
-import com.chaika.batch.configuration.input.reader.flatfiles.mapper.CustomerFlatFilesJobFieldSetMapper;
+import com.chaika.batch.configuration.input.reader.mapper.CustomerFlatFilesJobFieldSetMapper;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.MultiResourceItemReader;
@@ -28,7 +27,7 @@ public class MultiFlatFilesJobConfiguration {
 
     private final StepBuilderFactory stepBuilderFactory;
 
-    @Value("classpath:/data/multi/customer*.csv")
+    @Value("classpath*:/data/multi/customer*.csv")
     private Resource[] inputFiles;
 
     @Autowired
@@ -78,7 +77,7 @@ public class MultiFlatFilesJobConfiguration {
     public Step multiFlatFilesJobStep1() {
         return stepBuilderFactory.get("multiFlatFilesJobStep1")
                 .<Customer, Customer>chunk(10)
-                .reader(customerMultiFlatFilesJobItemReader())
+                .reader(multiResourceMultiFlatFilesJobItemReader())
                 .writer(customerMultiFlatFilesJobItemWriter())
                 .build();
     }
