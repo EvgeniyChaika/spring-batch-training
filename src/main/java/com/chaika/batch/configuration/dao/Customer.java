@@ -1,4 +1,4 @@
-package com.chaika.batch.configuration.input.reader.dao;
+package com.chaika.batch.configuration.dao;
 
 import org.springframework.batch.item.ResourceAware;
 import org.springframework.core.io.Resource;

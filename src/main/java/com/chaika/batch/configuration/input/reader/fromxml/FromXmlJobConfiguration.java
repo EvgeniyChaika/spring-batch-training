@@ -1,6 +1,6 @@
 package com.chaika.batch.configuration.input.reader.fromxml;
 
-import com.chaika.batch.configuration.input.reader.dao.Customer;
+import com.chaika.batch.configuration.dao.Customer;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;

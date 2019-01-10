@@ -34,7 +34,7 @@ public class StateJobConfiguration {
     public StatefulItemReader stateJobItemReader() {
         List<String> items = new ArrayList<>(100);
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 1; i <= 100; i++) {
             items.add(String.valueOf(i));
         }
 

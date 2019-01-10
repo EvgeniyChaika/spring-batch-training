@@ -1,6 +1,6 @@
 package com.chaika.batch.configuration.input.reader.mapper;
 
-import com.chaika.batch.configuration.input.reader.dao.Customer;
+import com.chaika.batch.configuration.dao.Customer;
 import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.transform.FieldSet;
 import org.springframework.validation.BindException;

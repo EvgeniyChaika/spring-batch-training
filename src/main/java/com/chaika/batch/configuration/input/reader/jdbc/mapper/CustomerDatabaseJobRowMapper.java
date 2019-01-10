@@ -1,6 +1,6 @@
 package com.chaika.batch.configuration.input.reader.jdbc.mapper;
 
-import com.chaika.batch.configuration.input.reader.dao.Customer;
+import com.chaika.batch.configuration.dao.Customer;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
