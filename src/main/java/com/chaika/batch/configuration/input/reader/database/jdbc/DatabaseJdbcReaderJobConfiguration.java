@@ -1,7 +1,7 @@
-package com.chaika.batch.configuration.input.reader.jdbc;
+package com.chaika.batch.configuration.input.reader.database.jdbc;
 
 import com.chaika.batch.configuration.dao.Customer;
-import com.chaika.batch.configuration.input.reader.jdbc.mapper.CustomerDatabaseJobRowMapper;
+import com.chaika.batch.configuration.input.reader.database.jdbc.mapper.CustomerDatabaseJdbcReaderJobRowMapper;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -23,7 +23,7 @@ import java.util.Map;
  * Created by echaika on 28.12.2018
  */
 @Configuration
-public class DatabaseJobConfiguration {
+public class DatabaseJdbcReaderJobConfiguration {
 
     private final JobBuilderFactory jobBuilderFactory;
 
@@ -32,30 +32,30 @@ public class DatabaseJobConfiguration {
     private final DataSource dataSource;
 
     @Autowired
-    public DatabaseJobConfiguration(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, DataSource dataSource) {
+    public DatabaseJdbcReaderJobConfiguration(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, DataSource dataSource) {
         this.jobBuilderFactory = jobBuilderFactory;
         this.stepBuilderFactory = stepBuilderFactory;
         this.dataSource = dataSource;
     }
 
 //    @Bean
-//    public JdbcCursorItemReader<Customer> cursorDatabaseJobItemReader() {
+//    public JdbcCursorItemReader<Customer> cursorDatabaseJdbcReaderJobItemReader() {
 //        JdbcCursorItemReader<Customer> reader = new JdbcCursorItemReader<>();
 //
 //        reader.setSql("select * from customer order by lastName, firstName");
 //        reader.setDataSource(this.dataSource);
-//        reader.setRowMapper(new CustomerDatabaseJobRowMapper());
+//        reader.setRowMapper(new CustomerDatabaseJdbcReaderJobRowMapper());
 //
 //        return reader;
 //    }
 
     @Bean
-    public JdbcPagingItemReader<Customer> pagingDatabaseJobItemReader() {
+    public JdbcPagingItemReader<Customer> pagingDatabaseJdbcReaderJobItemReader() {
         JdbcPagingItemReader<Customer> reader = new JdbcPagingItemReader<>();
 
         reader.setDataSource(this.dataSource);
         reader.setFetchSize(10);
-        reader.setRowMapper(new CustomerDatabaseJobRowMapper());
+        reader.setRowMapper(new CustomerDatabaseJdbcReaderJobRowMapper());
 
         PostgresPagingQueryProvider queryProvider = new PostgresPagingQueryProvider();
 
@@ -73,7 +73,7 @@ public class DatabaseJobConfiguration {
     }
 
     @Bean
-    public ItemWriter<Customer> customerDatabaseJobItemWriter() {
+    public ItemWriter<Customer> customerDatabaseJdbcReaderJobItemWriter() {
         return new ItemWriter<Customer>() {
             @Override
             public void write(List<? extends Customer> items) throws Exception {
@@ -85,18 +85,18 @@ public class DatabaseJobConfiguration {
     }
 
     @Bean
-    public Step databaseJobStep1() {
-        return stepBuilderFactory.get("databaseJobStep1")
+    public Step databaseJdbcReaderJobStep1() {
+        return stepBuilderFactory.get("databaseJdbcReaderJobStep1")
                 .<Customer, Customer>chunk(10)
-                .reader(pagingDatabaseJobItemReader())
-                .writer(customerDatabaseJobItemWriter())
+                .reader(pagingDatabaseJdbcReaderJobItemReader())
+                .writer(customerDatabaseJdbcReaderJobItemWriter())
                 .build();
     }
 
     @Bean
-    public Job databaseJob() {
-        return jobBuilderFactory.get("databaseJob")
-                .start(databaseJobStep1())
+    public Job databaseJdbcReaderJob() {
+        return jobBuilderFactory.get("databaseJdbcReaderJob")
+                .start(databaseJdbcReaderJobStep1())
                 .build();
     }
 }

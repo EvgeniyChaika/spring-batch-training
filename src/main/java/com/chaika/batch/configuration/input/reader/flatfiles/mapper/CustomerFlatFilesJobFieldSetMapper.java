@@ -1,4 +1,4 @@
-package com.chaika.batch.configuration.input.reader.mapper;
+package com.chaika.batch.configuration.input.reader.flatfiles.mapper;
 
 import com.chaika.batch.configuration.dao.Customer;
 import org.springframework.batch.item.file.mapping.FieldSetMapper;

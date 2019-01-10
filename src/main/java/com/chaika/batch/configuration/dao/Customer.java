@@ -4,6 +4,7 @@ import org.springframework.batch.item.ResourceAware;
 import org.springframework.core.io.Resource;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Created by echaika on 27.12.2018
@@ -39,7 +40,9 @@ public class Customer implements ResourceAware {
         sb.append(", firstName='").append(firstName).append('\'');
         sb.append(", lastName='").append(lastName).append('\'');
         sb.append(", birthDate=").append(birthdate);
-        sb.append(", from ").append(resource.getDescription());
+        if (Objects.nonNull(resource)) {
+            sb.append(", from ").append(resource.getDescription());
+        }
         sb.append('}');
         return sb.toString();
     }

@@ -1,7 +1,7 @@
 package com.chaika.batch.configuration.input.reader.multiflatfiles;
 
 import com.chaika.batch.configuration.dao.Customer;
-import com.chaika.batch.configuration.input.reader.mapper.CustomerFlatFilesJobFieldSetMapper;
+import com.chaika.batch.configuration.input.reader.flatfiles.mapper.CustomerFlatFilesJobFieldSetMapper;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
