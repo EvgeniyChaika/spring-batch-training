@@ -1,4 +1,4 @@
-package com.chaika.batch.configuration.input.reader.database.jdbc.mapper;
+package com.chaika.batch.configuration.mapper.jdbc;
 
 import com.chaika.batch.configuration.dao.Customer;
 import org.springframework.jdbc.core.RowMapper;
@@ -9,7 +9,7 @@ import java.sql.SQLException;
 /**
  * Created by echaika on 28.12.2018
  */
-public class CustomerDatabaseJdbcReaderJobRowMapper implements RowMapper<Customer> {
+public class CustomerDatabaseJdbcJobRowMapper implements RowMapper<Customer> {
 
     @Override
     public Customer mapRow(ResultSet rs, int rowNum) throws SQLException {

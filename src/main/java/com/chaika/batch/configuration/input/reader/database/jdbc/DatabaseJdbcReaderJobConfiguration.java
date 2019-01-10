@@ -1,7 +1,7 @@
 package com.chaika.batch.configuration.input.reader.database.jdbc;
 
 import com.chaika.batch.configuration.dao.Customer;
-import com.chaika.batch.configuration.input.reader.database.jdbc.mapper.CustomerDatabaseJdbcReaderJobRowMapper;
+import com.chaika.batch.configuration.mapper.jdbc.CustomerDatabaseJdbcJobRowMapper;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -44,7 +44,7 @@ public class DatabaseJdbcReaderJobConfiguration {
 //
 //        reader.setSql("select * from customer order by lastName, firstName");
 //        reader.setDataSource(this.dataSource);
-//        reader.setRowMapper(new CustomerDatabaseJdbcReaderJobRowMapper());
+//        reader.setRowMapper(new CustomerDatabaseJdbcJobRowMapper());
 //
 //        return reader;
 //    }
@@ -55,7 +55,7 @@ public class DatabaseJdbcReaderJobConfiguration {
 
         reader.setDataSource(this.dataSource);
         reader.setFetchSize(10);
-        reader.setRowMapper(new CustomerDatabaseJdbcReaderJobRowMapper());
+        reader.setRowMapper(new CustomerDatabaseJdbcJobRowMapper());
 
         PostgresPagingQueryProvider queryProvider = new PostgresPagingQueryProvider();
 

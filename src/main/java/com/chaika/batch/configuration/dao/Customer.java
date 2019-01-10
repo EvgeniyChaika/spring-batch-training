@@ -28,6 +28,22 @@ public class Customer implements ResourceAware {
         this.birthdate = birthdate;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public Date getBirthdate() {
+        return birthdate;
+    }
+
     @Override
     public void setResource(Resource resource) {
         this.resource = resource;
