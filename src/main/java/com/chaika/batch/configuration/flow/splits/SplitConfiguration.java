@@ -1,4 +1,4 @@
-package com.chaika.batch.configuration.split;
+package com.chaika.batch.configuration.flow.splits;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.StepContribution;

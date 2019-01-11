@@ -1,4 +1,4 @@
-package com.chaika.batch.configuration.decisions;
+package com.chaika.batch.configuration.flow.decisions;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;

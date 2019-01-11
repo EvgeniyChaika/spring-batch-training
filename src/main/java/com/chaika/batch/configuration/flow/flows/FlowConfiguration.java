@@ -1,4 +1,4 @@
-package com.chaika.batch.configuration.flow;
+package com.chaika.batch.configuration.flow.flows;
 
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -27,7 +27,7 @@ public class FlowConfiguration {
         return stepBuilderFactory
                 .get("flowStep1")
                 .tasklet((contribution, chunkContext) -> {
-                    System.out.println(">> flow Step 1 from inside exampleFlow");
+                    System.out.println(">> flows Step 1 from inside exampleFlow");
                     return RepeatStatus.FINISHED;
                 }).build();
     }
@@ -37,7 +37,7 @@ public class FlowConfiguration {
         return stepBuilderFactory
                 .get("flowStep2")
                 .tasklet((contribution, chunkContext) -> {
-                    System.out.println(">> flow Step 2 from inside exampleFlow");
+                    System.out.println(">> flows Step 2 from inside exampleFlow");
                     return RepeatStatus.FINISHED;
                 }).build();
     }

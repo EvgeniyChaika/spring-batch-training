@@ -1,4 +1,4 @@
-package com.chaika.batch.configuration.listeners;
+package com.chaika.batch.configuration.flow.listeners;
 
 import org.springframework.batch.core.annotation.AfterChunk;
 import org.springframework.batch.core.annotation.BeforeChunk;

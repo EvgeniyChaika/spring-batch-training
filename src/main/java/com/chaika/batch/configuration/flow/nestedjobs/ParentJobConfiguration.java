@@ -1,4 +1,4 @@
-package com.chaika.batch.configuration.nested;
+package com.chaika.batch.configuration.flow.nestedjobs;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;

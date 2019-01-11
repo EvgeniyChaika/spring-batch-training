@@ -1,4 +1,4 @@
-package com.chaika.batch.configuration.flow;
+package com.chaika.batch.configuration.flow.flows;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
