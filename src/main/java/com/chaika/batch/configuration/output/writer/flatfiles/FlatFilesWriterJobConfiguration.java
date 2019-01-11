@@ -72,7 +72,7 @@ public class FlatFilesWriterJobConfiguration {
         itemWriter.setLineAggregator(new CustomerLineAggregator());
 
         String customerOutputPath = File.createTempFile("customerOutput", ".out").getAbsolutePath();
-        System.out.println(">> Output path: " + customerOutputPath);
+        System.out.println(">> customerFlatFilesWriterJob output path: " + customerOutputPath);
         itemWriter.setResource(new FileSystemResource(customerOutputPath));
         itemWriter.afterPropertiesSet();
 
