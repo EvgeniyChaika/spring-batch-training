@@ -35,7 +35,7 @@ public class FromXmlJobConfiguration {
     }
 
     @Bean
-    public StaxEventItemReader<Customer> cutomerFromXmlJobItemReader() {
+    public StaxEventItemReader<Customer> customerFromXmlJobItemReader() {
         XStreamMarshaller unmarshaller = new XStreamMarshaller();
 
         Map<String, Class> aliases = new HashMap<>();
@@ -63,7 +63,7 @@ public class FromXmlJobConfiguration {
     public Step fromXmlJobStep1() {
         return stepBuilderFactory.get("fromXmlJobStep1")
                 .<Customer, Customer>chunk(10)
-                .reader(cutomerFromXmlJobItemReader())
+                .reader(customerFromXmlJobItemReader())
                 .writer(customerFromXmlJobItemWriter())
                 .build();
     }
