@@ -1,6 +1,6 @@
-package com.chaika.batch.configuration.mapper.flatfiles;
+package com.chaika.batch.configuration.utils.mapper.flatfiles;
 
-import com.chaika.batch.configuration.dao.Customer;
+import com.chaika.batch.configuration.utils.dao.Customer;
 import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.transform.FieldSet;
 import org.springframework.validation.BindException;
