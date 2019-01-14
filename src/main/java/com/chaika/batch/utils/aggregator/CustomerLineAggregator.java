@@ -1,6 +1,6 @@
-package com.chaika.batch.configuration.utils.aggregator;
+package com.chaika.batch.utils.aggregator;
 
-import com.chaika.batch.configuration.utils.dao.Customer;
+import com.chaika.batch.utils.dao.Customer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.batch.item.file.transform.LineAggregator;

@@ -1,7 +1,7 @@
 package com.chaika.batch.configuration.output.writer.database.jdbc;
 
-import com.chaika.batch.configuration.utils.dao.Customer;
-import com.chaika.batch.configuration.utils.mapper.flatfiles.CustomerFlatFilesJobFieldSetMapper;
+import com.chaika.batch.utils.dao.Customer;
+import com.chaika.batch.utils.mapper.flatfiles.CustomerFlatFilesJobFieldSetMapper;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;

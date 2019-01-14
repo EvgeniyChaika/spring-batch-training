@@ -1,4 +1,4 @@
-package com.chaika.batch.configuration.utils.dao;
+package com.chaika.batch.utils.dao;
 
 import org.springframework.batch.item.ResourceAware;
 import org.springframework.core.io.Resource;

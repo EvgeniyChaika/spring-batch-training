@@ -1,9 +1,9 @@
 package com.chaika.batch.configuration.output.writer.multipledestinations;
 
-import com.chaika.batch.configuration.utils.aggregator.CustomerLineAggregator;
-import com.chaika.batch.configuration.utils.classifier.CustomerClassifier;
-import com.chaika.batch.configuration.utils.dao.Customer;
-import com.chaika.batch.configuration.utils.mapper.jdbc.CustomerDatabaseJdbcJobRowMapper;
+import com.chaika.batch.utils.aggregator.CustomerLineAggregator;
+import com.chaika.batch.utils.classifier.CustomerClassifier;
+import com.chaika.batch.utils.dao.Customer;
+import com.chaika.batch.utils.mapper.jdbc.CustomerDatabaseJdbcJobRowMapper;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;

@@ -1,4 +1,4 @@
-package com.chaika.batch.configuration.output.writer.toxml;
+package com.chaika.batch.configuration.processing.processor.example;
 
 import com.chaika.batch.utils.dao.Customer;
 import com.chaika.batch.utils.mapper.jdbc.CustomerDatabaseJdbcJobRowMapper;
@@ -22,10 +22,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by echaika on 11.01.2019
+ * Created by echaika on 14.01.2019
  */
 @Configuration
-public class ToXmlWriterJobConfiguration {
+public class ProcessorInterfaceJobConfiguration {
 
     private final JobBuilderFactory jobBuilderFactory;
 
@@ -34,15 +34,16 @@ public class ToXmlWriterJobConfiguration {
     private final DataSource dataSource;
 
     @Autowired
-    public ToXmlWriterJobConfiguration(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, DataSource dataSource) {
+    public ProcessorInterfaceJobConfiguration(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, DataSource dataSource) {
         this.jobBuilderFactory = jobBuilderFactory;
         this.stepBuilderFactory = stepBuilderFactory;
         this.dataSource = dataSource;
     }
 
     @Bean
-    public JdbcPagingItemReader<Customer> pagingToXmlWriterJobItemReader() {
+    public JdbcPagingItemReader<Customer> pagingProcessorInterfaceJobItemReader() {
         JdbcPagingItemReader<Customer> reader = new JdbcPagingItemReader<>();
+
         reader.setDataSource(dataSource);
         reader.setFetchSize(10);
         reader.setRowMapper(new CustomerDatabaseJdbcJobRowMapper());
@@ -62,7 +63,12 @@ public class ToXmlWriterJobConfiguration {
     }
 
     @Bean
-    public StaxEventItemWriter<Customer> customerToXmlWriterJobItemWriter() throws Exception {
+    public UpperCaseItemProcessor processorInterfaceJobItemProcessor() {
+        return new UpperCaseItemProcessor();
+    }
+
+    @Bean
+    public StaxEventItemWriter<Customer> processorInterfaceJobItemWriter() throws Exception {
         XStreamMarshaller marshaller = new XStreamMarshaller();
 
         Map<String, Class> aliases = new HashMap<>();
@@ -82,18 +88,19 @@ public class ToXmlWriterJobConfiguration {
     }
 
     @Bean
-    public Step customerToXmlWriterJobStep1() throws Exception {
-        return stepBuilderFactory.get("customerToXmlWriterJobStep1")
+    public Step processorInterfaceJobStep1() throws Exception {
+        return stepBuilderFactory.get("processorInterfaceJobStep1")
                 .<Customer, Customer>chunk(10)
-                .reader(pagingToXmlWriterJobItemReader())
-                .writer(customerToXmlWriterJobItemWriter())
+                .reader(pagingProcessorInterfaceJobItemReader())
+                .processor(processorInterfaceJobItemProcessor())
+                .writer(processorInterfaceJobItemWriter())
                 .build();
     }
 
     @Bean
-    public Job customerToXmlWriterJob() throws Exception {
-        return jobBuilderFactory.get("customerToXmlWriterJob")
-                .start(customerToXmlWriterJobStep1())
+    public Job processorInterfaceJob() throws Exception {
+        return jobBuilderFactory.get("processorInterfaceJob")
+                .start(processorInterfaceJobStep1())
                 .build();
     }
 }

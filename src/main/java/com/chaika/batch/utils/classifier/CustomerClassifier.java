@@ -1,6 +1,6 @@
-package com.chaika.batch.configuration.utils.classifier;
+package com.chaika.batch.utils.classifier;
 
-import com.chaika.batch.configuration.utils.dao.Customer;
+import com.chaika.batch.utils.dao.Customer;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.classify.Classifier;
 
