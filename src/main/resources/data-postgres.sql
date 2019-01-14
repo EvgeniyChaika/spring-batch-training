@@ -14,7 +14,7 @@ insert into customer (firstname, lastname, birthdate) values ('Casasnh', 'Qoemkm
 insert into customer (firstname, lastname, birthdate) values ('Jonhnhnh', 'Doemkmkm', '12/11/2018');
 insert into customer (firstname, lastname, birthdate) values ('Qonhnhnh', 'Doemkmkm', '12/04/2018');
 insert into customer (firstname, lastname, birthdate) values ('Fonhnhnh', 'Noemkmkm', '12/11/2018');
-insert into customer (firstname, lastname, birthdate) values ('Jonhnhnh', 'Poemkmkm', '12/11/2018');
+insert into customer (firstname, lastname, birthdate) values ('Aonhnhnh', 'Poemkmkm', '12/11/2018');
 insert into customer (firstname, lastname, birthdate) values ('Nonhnhnh', 'Moemkmkm', '12/08/2018');
 insert into customer (firstname, lastname, birthdate) values ('Jonhnhnh', 'Doemkmkm', '12/11/2018');
 insert into customer (firstname, lastname, birthdate) values ('Ponhnhnh', 'Foemkmkm', '12/09/2018');
