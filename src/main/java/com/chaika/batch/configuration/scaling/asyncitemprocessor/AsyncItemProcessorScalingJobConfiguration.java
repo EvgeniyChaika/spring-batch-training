@@ -1,4 +1,4 @@
-package com.chaika.batch.configuration.scaling.multithreadedstep;
+package com.chaika.batch.configuration.scaling.asyncitemprocessor;
 
 import com.chaika.batch.utils.dao.Customer;
 import com.chaika.batch.utils.mapper.jdbc.CustomerDatabaseJdbcJobRowMapper;
@@ -6,6 +6,9 @@ import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.integration.async.AsyncItemProcessor;
+import org.springframework.batch.integration.async.AsyncItemWriter;
+import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.JdbcPagingItemReader;
@@ -19,12 +22,13 @@ import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Created by echaika on 17.01.2019
  */
 @Configuration
-public class MultithreadedStepScalingJobConfiguration {
+public class AsyncItemProcessorScalingJobConfiguration {
 
     private final JobBuilderFactory jobBuilderFactory;
 
@@ -33,14 +37,14 @@ public class MultithreadedStepScalingJobConfiguration {
     private final DataSource dataSource;
 
     @Autowired
-    public MultithreadedStepScalingJobConfiguration(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, DataSource dataSource) {
+    public AsyncItemProcessorScalingJobConfiguration(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, DataSource dataSource) {
         this.jobBuilderFactory = jobBuilderFactory;
         this.stepBuilderFactory = stepBuilderFactory;
         this.dataSource = dataSource;
     }
 
     @Bean
-    public JdbcPagingItemReader<Customer> pagingMultithreadedStepScalingJobItemReader() {
+    public JdbcPagingItemReader<Customer> pagingAsyncItemProcessorScalingJobItemReader() {
         JdbcPagingItemReader<Customer> reader = new JdbcPagingItemReader<>();
 
         reader.setDataSource(this.dataSource);
@@ -64,7 +68,32 @@ public class MultithreadedStepScalingJobConfiguration {
     }
 
     @Bean
-    public JdbcBatchItemWriter<Customer> multithreadedStepScalingJobItemWriter() {
+    public ItemProcessor<Customer, Customer> asyncItemProcessorScalingJobItemProcessor() {
+        return new ItemProcessor<Customer, Customer>() {
+            @Override
+            public Customer process(Customer item) throws Exception {
+                Thread.sleep(new Random().nextInt(10));
+                return new Customer(item.getId(),
+                        item.getFirstName().toUpperCase(),
+                        item.getLastName().toUpperCase(),
+                        item.getBirthdate());
+            }
+        };
+    }
+
+    @Bean
+    public AsyncItemProcessor asyncItemProcessorScalingJobAsyncItemProcessor() throws Exception {
+        AsyncItemProcessor<Customer, Customer> asyncItemProcessor = new AsyncItemProcessor<>();
+
+        asyncItemProcessor.setDelegate(asyncItemProcessorScalingJobItemProcessor());
+        asyncItemProcessor.setTaskExecutor(new SimpleAsyncTaskExecutor());
+        asyncItemProcessor.afterPropertiesSet();
+
+        return asyncItemProcessor;
+    }
+
+    @Bean
+    public JdbcBatchItemWriter<Customer> asyncItemProcessorScalingJobItemWriter() {
         JdbcBatchItemWriter<Customer> itemWriter = new JdbcBatchItemWriter<>();
 
         itemWriter.setDataSource(dataSource);
@@ -76,19 +105,30 @@ public class MultithreadedStepScalingJobConfiguration {
     }
 
     @Bean
-    public Step multithreadedStepScalingJobStep1() {
-        return stepBuilderFactory.get("multithreadedStepScalingJobStep1")
-                .<Customer, Customer>chunk(1000)
-                .reader(pagingMultithreadedStepScalingJobItemReader())
-                .writer(multithreadedStepScalingJobItemWriter())
-                .taskExecutor(new SimpleAsyncTaskExecutor())
+    public AsyncItemWriter<Customer> asyncItemProcessorScalingJobAsyncItemWriter() throws Exception {
+        AsyncItemWriter<Customer> asyncItemWriter = new AsyncItemWriter<>();
+
+        asyncItemWriter.setDelegate(asyncItemProcessorScalingJobItemWriter());
+        asyncItemWriter.afterPropertiesSet();
+
+        return asyncItemWriter;
+    }
+
+    @Bean
+    @SuppressWarnings("unchecked")
+    public Step asyncItemProcessorScalingJobStep1() throws Exception {
+        return stepBuilderFactory.get("asyncItemProcessorScalingJobStep1")
+                .chunk(1000)
+                .reader(pagingAsyncItemProcessorScalingJobItemReader())
+                .processor(asyncItemProcessorScalingJobAsyncItemProcessor())
+                .writer(asyncItemProcessorScalingJobAsyncItemWriter())
                 .build();
     }
 
     @Bean
-    public Job multithreadedStepScalingJob() {
-        return jobBuilderFactory.get("multithreadedStepScalingJob")
-                .start(multithreadedStepScalingJobStep1())
+    public Job asyncItemProcessorScalingJob() throws Exception {
+        return jobBuilderFactory.get("asyncItemProcessorScalingJob")
+                .start(asyncItemProcessorScalingJobStep1())
                 .build();
     }
 }
