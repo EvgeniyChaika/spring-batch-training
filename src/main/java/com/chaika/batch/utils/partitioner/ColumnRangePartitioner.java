@@ -1,4 +1,4 @@
-package com.chaika.batch.configuration.scaling.localpartitioning;
+package com.chaika.batch.utils.partitioner;
 
 import org.springframework.batch.core.partition.support.Partitioner;
 import org.springframework.batch.item.ExecutionContext;

@@ -2,6 +2,7 @@ package com.chaika.batch.configuration.scaling.localpartitioning;
 
 import com.chaika.batch.utils.dao.Customer;
 import com.chaika.batch.utils.mapper.jdbc.CustomerDatabaseJdbcJobRowMapper;
+import com.chaika.batch.utils.partitioner.ColumnRangePartitioner;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -55,7 +56,7 @@ public class LocalPartitioningScalingJobConfiguration {
 
     @Bean
     @StepScope
-    public JdbcPagingItemReader<Customer> paginglocalPartitioningScalingJobItemReader(
+    public JdbcPagingItemReader<Customer> pagingLocalPartitioningScalingJobItemReader(
             @Value("#{stepExecutionContext['minValue']}") Long minValue,
             @Value("#{stepExecutionContext['maxValue']}") Long maxValue
     ) {
@@ -99,7 +100,7 @@ public class LocalPartitioningScalingJobConfiguration {
     public Step localPartitioningScalingJobSlaveStep() {
         return stepBuilderFactory.get("localPartitioningScalingJobSlaveStep")
                 .<Customer, Customer>chunk(1000)
-                .reader(paginglocalPartitioningScalingJobItemReader(null, null))
+                .reader(pagingLocalPartitioningScalingJobItemReader(null, null))
                 .writer(localPartitioningScalingJobItemWriter())
                 .build();
     }
