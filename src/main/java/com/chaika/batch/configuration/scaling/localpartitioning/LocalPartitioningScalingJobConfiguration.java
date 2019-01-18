@@ -1,4 +1,4 @@
-package com.chaika.batch.configuration.scaling.multithreadedstep;
+package com.chaika.batch.configuration.scaling.localpartitioning;
 
 import com.chaika.batch.utils.dao.Customer;
 import com.chaika.batch.utils.mapper.jdbc.CustomerDatabaseJdbcJobRowMapper;
@@ -6,12 +6,14 @@ import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.JdbcPagingItemReader;
 import org.springframework.batch.item.database.Order;
 import org.springframework.batch.item.database.support.PostgresPagingQueryProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
@@ -24,7 +26,7 @@ import java.util.Map;
  * Created by echaika on 17.01.2019
  */
 @Configuration
-public class MultithreadedStepScalingJobConfiguration {
+public class LocalPartitioningScalingJobConfiguration {
 
     private final JobBuilderFactory jobBuilderFactory;
 
@@ -33,14 +35,31 @@ public class MultithreadedStepScalingJobConfiguration {
     private final DataSource dataSource;
 
     @Autowired
-    public MultithreadedStepScalingJobConfiguration(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, DataSource dataSource) {
+    public LocalPartitioningScalingJobConfiguration(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, DataSource dataSource) {
         this.jobBuilderFactory = jobBuilderFactory;
         this.stepBuilderFactory = stepBuilderFactory;
         this.dataSource = dataSource;
     }
 
     @Bean
-    public JdbcPagingItemReader<Customer> pagingMultithreadedStepScalingJobItemReader() {
+    public ColumnRangePartitioner localPartitioningScalingJobPartitioner() {
+        ColumnRangePartitioner columnRangePartitioner = new ColumnRangePartitioner();
+
+        columnRangePartitioner.setColumn("id");
+        columnRangePartitioner.setDataSource(dataSource);
+        columnRangePartitioner.setTable("customer");
+
+        return columnRangePartitioner;
+    }
+
+
+    @Bean
+    @StepScope
+    public JdbcPagingItemReader<Customer> paginglocalPartitioningScalingJobItemReader(
+            @Value("#{stepExecutionContext['minValue']}") Long minValue,
+            @Value("#{stepExecutionContext['maxValue']}") Long maxValue
+    ) {
+        System.out.println("reading " + minValue + " to " + maxValue);
         JdbcPagingItemReader<Customer> reader = new JdbcPagingItemReader<>();
 
         reader.setDataSource(dataSource);
@@ -51,6 +70,7 @@ public class MultithreadedStepScalingJobConfiguration {
 
         queryProvider.setSelectClause("id, firstname, lastname, birthdate");
         queryProvider.setFromClause("from customer");
+        queryProvider.setWhereClause("where id >= " + minValue + " and id < " + maxValue);
 
         Map<String, Order> sortKeys = new HashMap<>(1);
         sortKeys.put("id", Order.ASCENDING);
@@ -58,13 +78,13 @@ public class MultithreadedStepScalingJobConfiguration {
         queryProvider.setSortKeys(sortKeys);
 
         reader.setQueryProvider(queryProvider);
-        reader.setSaveState(false);
 
         return reader;
     }
 
     @Bean
-    public JdbcBatchItemWriter<Customer> multithreadedStepScalingJobItemWriter() {
+    @StepScope
+    public JdbcBatchItemWriter<Customer> localPartitioningScalingJobItemWriter() {
         JdbcBatchItemWriter<Customer> itemWriter = new JdbcBatchItemWriter<>();
 
         itemWriter.setDataSource(dataSource);
@@ -76,19 +96,28 @@ public class MultithreadedStepScalingJobConfiguration {
     }
 
     @Bean
-    public Step multithreadedStepScalingJobStep1() {
-        return stepBuilderFactory.get("multithreadedStepScalingJobStep1")
+    public Step localPartitioningScalingJobSlaveStep() {
+        return stepBuilderFactory.get("localPartitioningScalingJobSlaveStep")
                 .<Customer, Customer>chunk(1000)
-                .reader(pagingMultithreadedStepScalingJobItemReader())
-                .writer(multithreadedStepScalingJobItemWriter())
+                .reader(paginglocalPartitioningScalingJobItemReader(null, null))
+                .writer(localPartitioningScalingJobItemWriter())
+                .build();
+    }
+
+    @Bean
+    public Step localPartitioningScalingJobStep1() {
+        return stepBuilderFactory.get("localPartitioningScalingJobStep1")
+                .partitioner(localPartitioningScalingJobSlaveStep().getName(), localPartitioningScalingJobPartitioner())
+                .step(localPartitioningScalingJobSlaveStep())
+                .gridSize(4)
                 .taskExecutor(new SimpleAsyncTaskExecutor())
                 .build();
     }
 
     @Bean
-    public Job multithreadedStepScalingJob() {
-        return jobBuilderFactory.get("multithreadedStepScalingJob")
-                .start(multithreadedStepScalingJobStep1())
+    public Job localPartitioningScalingJob() {
+        return jobBuilderFactory.get("localPartitioningScalingJob")
+                .start(localPartitioningScalingJobStep1())
                 .build();
     }
 }

@@ -47,7 +47,7 @@ public class AsyncItemProcessorScalingJobConfiguration {
     public JdbcPagingItemReader<Customer> pagingAsyncItemProcessorScalingJobItemReader() {
         JdbcPagingItemReader<Customer> reader = new JdbcPagingItemReader<>();
 
-        reader.setDataSource(this.dataSource);
+        reader.setDataSource(dataSource);
         reader.setFetchSize(1000);
         reader.setRowMapper(new CustomerDatabaseJdbcJobRowMapper());
 
