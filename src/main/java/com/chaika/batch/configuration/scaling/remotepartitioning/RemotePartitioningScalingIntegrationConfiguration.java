@@ -4,6 +4,7 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -23,8 +24,8 @@ import org.springframework.messaging.PollableChannel;
 public class RemotePartitioningScalingIntegrationConfiguration {
 
     @Bean
-    public MessagingTemplate messageTemplate() {
-        MessagingTemplate messagingTemplate = new MessagingTemplate(outboundRequests());
+    public MessagingTemplate remotePartitioningScalingJobMessageTemplate() {
+        MessagingTemplate messagingTemplate = new MessagingTemplate(remotePartitioningScalingJobOutboundRequests());
 
         messagingTemplate.setReceiveTimeout(60_000_000L);
 
@@ -32,17 +33,17 @@ public class RemotePartitioningScalingIntegrationConfiguration {
     }
 
     @Bean
-    public DirectChannel outboundRequests() {
+    public DirectChannel remotePartitioningScalingJobOutboundRequests() {
         return new DirectChannel();
     }
 
     @Bean
-    @ServiceActivator(inputChannel = "outboundRequests")
-    public AmqpOutboundEndpoint amqpOutboundEndpoint(AmqpTemplate template) {
+    @ServiceActivator(inputChannel = "remotePartitioningScalingJobOutboundRequests")
+    public AmqpOutboundEndpoint remotePartitioningScalingJobAmqpOutboundEndpoint(AmqpTemplate template) {
         AmqpOutboundEndpoint endpoint = new AmqpOutboundEndpoint(template);
 
         endpoint.setExpectReply(true);
-        endpoint.setOutputChannel(inboundRequests());
+        endpoint.setOutputChannel(remotePartitioningScalingJobInboundRequests());
         endpoint.setRoutingKey("partition.requests");
 
         return endpoint;
@@ -50,23 +51,23 @@ public class RemotePartitioningScalingIntegrationConfiguration {
 
 
     @Bean
-    public Queue requestQueue() {
+    public Queue remotePartitioningScalingJobRequestQueue() {
         return new Queue("partition.requests", false);
     }
 
     @Bean
     @Profile("slave")
-    public AmqpInboundChannelAdapter inbound(SimpleMessageListenerContainer listenerContainer) {
+    public AmqpInboundChannelAdapter remotePartitioningScalingJobInbound(@Qualifier("remotePartitioningScalingJobContainer") SimpleMessageListenerContainer listenerContainer) {
         AmqpInboundChannelAdapter adapter = new AmqpInboundChannelAdapter(listenerContainer);
 
-        adapter.setOutputChannel(inboundRequests());
+        adapter.setOutputChannel(remotePartitioningScalingJobInboundRequests());
         adapter.afterPropertiesSet();
 
         return adapter;
     }
 
     @Bean
-    public SimpleMessageListenerContainer container(ConnectionFactory connectionFactory) {
+    public SimpleMessageListenerContainer remotePartitioningScalingJobContainer(ConnectionFactory connectionFactory) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory);
 
         container.setQueueNames("partition.requests");
@@ -76,12 +77,12 @@ public class RemotePartitioningScalingIntegrationConfiguration {
     }
 
     @Bean
-    public PollableChannel outboundStaging() {
+    public PollableChannel remotePartitioningScalingJobOutboundStaging() {
         return new NullChannel();
     }
 
     @Bean
-    public QueueChannel inboundRequests() {
+    public QueueChannel remotePartitioningScalingJobInboundRequests() {
         return new QueueChannel();
     }
 }

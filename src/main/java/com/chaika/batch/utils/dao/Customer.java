@@ -3,13 +3,14 @@ package com.chaika.batch.utils.dao;
 import org.springframework.batch.item.ResourceAware;
 import org.springframework.core.io.Resource;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
 /**
  * Created by echaika on 27.12.2018
  */
-public class Customer implements ResourceAware {
+public class Customer implements ResourceAware, Serializable {
 
     private final Long id;
 

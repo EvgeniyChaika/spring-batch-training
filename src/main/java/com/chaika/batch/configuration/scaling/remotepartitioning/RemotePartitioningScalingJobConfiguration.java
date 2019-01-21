@@ -10,7 +10,6 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.batch.core.partition.PartitionHandler;
-import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.integration.partition.BeanFactoryStepLocator;
 import org.springframework.batch.integration.partition.MessageChannelPartitionHandler;
 import org.springframework.batch.integration.partition.StepExecutionRequestHandler;
@@ -21,6 +20,7 @@ import org.springframework.batch.item.database.Order;
 import org.springframework.batch.item.database.support.PostgresPagingQueryProvider;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -29,8 +29,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.core.MessagingTemplate;
-import org.springframework.integration.scheduling.PollerMetadata;
-import org.springframework.scheduling.support.PeriodicTrigger;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -50,19 +48,16 @@ public class RemotePartitioningScalingJobConfiguration implements ApplicationCon
 
     private final JobExplorer jobExplorer;
 
-    private final JobRepository jobRepository;
-
     private ApplicationContext applicationContext;
 
     private static final int GRID_SIZE = 4;
 
     @Autowired
-    public RemotePartitioningScalingJobConfiguration(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, DataSource dataSource, JobExplorer jobExplorer, JobRepository jobRepository) {
+    public RemotePartitioningScalingJobConfiguration(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, DataSource dataSource, JobExplorer jobExplorer) {
         this.jobBuilderFactory = jobBuilderFactory;
         this.stepBuilderFactory = stepBuilderFactory;
         this.dataSource = dataSource;
         this.jobExplorer = jobExplorer;
-        this.jobRepository = jobRepository;
     }
 
     @Override
@@ -71,7 +66,7 @@ public class RemotePartitioningScalingJobConfiguration implements ApplicationCon
     }
 
     @Bean
-    public PartitionHandler remotePartitioningScalingJobPartitionHandler(MessagingTemplate messagingTemplate) throws Exception {
+    public PartitionHandler remotePartitioningScalingJobPartitionHandler(@Qualifier("remotePartitioningScalingJobMessageTemplate") MessagingTemplate messagingTemplate) throws Exception {
         MessageChannelPartitionHandler partitionHandler = new MessageChannelPartitionHandler();
 
         partitionHandler.setStepName("remotePartitioningScalingJobSlaveStep");
@@ -97,8 +92,8 @@ public class RemotePartitioningScalingJobConfiguration implements ApplicationCon
 
     @Bean
     @Profile("slave")
-    @ServiceActivator(inputChannel = "inboundRequests", outputChannel = "outboundStaging")
-    public StepExecutionRequestHandler stepExecutionRequestHandler() {
+    @ServiceActivator(inputChannel = "remotePartitioningScalingJobInboundRequests", outputChannel = "remotePartitioningScalingJobOutboundStaging")
+    public StepExecutionRequestHandler remotePartitioningScalingJobStepExecutionRequestHandler() {
         StepExecutionRequestHandler stepExecutionRequestHandler = new StepExecutionRequestHandler();
 
         BeanFactoryStepLocator stepLocator = new BeanFactoryStepLocator();
@@ -109,15 +104,15 @@ public class RemotePartitioningScalingJobConfiguration implements ApplicationCon
 
         return stepExecutionRequestHandler;
     }
-
-    @Bean(name = PollerMetadata.DEFAULT_POLLER)
-    public PollerMetadata defaultPoller() {
-        PollerMetadata pollerMetadata = new PollerMetadata();
-
-        pollerMetadata.setTrigger(new PeriodicTrigger(10));
-
-        return pollerMetadata;
-    }
+// Delete comment status for executing 'remotePartitioningScalingJob'
+//    @Bean(name = PollerMetadata.DEFAULT_POLLER)
+//    public PollerMetadata defaultPoller() {
+//        PollerMetadata pollerMetadata = new PollerMetadata();
+//
+//        pollerMetadata.setTrigger(new PeriodicTrigger(10));
+//
+//        return pollerMetadata;
+//    }
 
     @Bean
     @StepScope
