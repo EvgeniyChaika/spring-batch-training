@@ -74,7 +74,7 @@ public class RemotePartitioningScalingJobConfiguration implements ApplicationCon
     public PartitionHandler remotePartitioningScalingJobPartitionHandler(MessagingTemplate messagingTemplate) throws Exception {
         MessageChannelPartitionHandler partitionHandler = new MessageChannelPartitionHandler();
 
-        partitionHandler.setStepName("slaveStep");
+        partitionHandler.setStepName("remotePartitioningScalingJobSlaveStep");
         partitionHandler.setGridSize(GRID_SIZE);
         partitionHandler.setMessagingOperations(messagingTemplate);
         partitionHandler.setPollInterval(5000L);
