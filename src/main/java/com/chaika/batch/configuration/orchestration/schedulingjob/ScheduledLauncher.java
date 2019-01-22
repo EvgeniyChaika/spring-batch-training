@@ -2,7 +2,6 @@ package com.chaika.batch.configuration.orchestration.schedulingjob;
 
 import org.springframework.batch.core.launch.JobOperator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,7 +17,7 @@ public class ScheduledLauncher {
         this.jobOperator = jobOperator;
     }
 
-    @Scheduled(fixedDelay = 5000L)
+//    @Scheduled(fixedDelay = 5000L)
     public void runSchedulingOrchestrationJob() throws Exception {
         jobOperator.startNextInstance("schedulingOrchestrationJob");
     }
